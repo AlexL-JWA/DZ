@@ -6,46 +6,70 @@
 const READ_FILE_NAME = 'read.txt';
 
 /**
- * File name to write.
+ * Longer than average file name.
  */
-const WRITE_FILE_NAME = 'result.txt';
+const LONGER_AVERAGE_FILE_NAME = 'longer.txt';
+
 
 /**
- * Read file.
+ * Read file to array.
  *
  * @param string $file_path File path.
  *
+ * @return array
  */
-function file_read( string $file_path ): void {
+function read_to_array( string $file_path ): array {
+	$string_array = [];
+
 	$file = fopen( $file_path, 'rb' );
 
-	$i = 1;
 	while ( ! feof( $file ) ) {
-		$str = trim( fgets( $file ) );
-		if ( $i % 2 !== 0 ) {
-			file_write( WRITE_FILE_NAME, $str );
-		}
 
-		$i ++;
+		$str = trim( fgets( $file ) );
+
+		if ( ! empty( $str ) ) {
+			$string_array[] = $str;
+		}
+	}
+
+	fclose( $file );
+
+	return $string_array;
+}
+
+/**
+ * Lengths string.
+ *
+ * @param string $str
+ *
+ * @return int
+ */
+function lengths_string( string $str ): int {
+	return strlen( $str );
+}
+
+/**
+ * Longer average.
+ *
+ * @param string $file_path
+ * @param array  $data
+ *
+ * @return void
+ */
+function longer_average( string $file_path, array $data ): void {
+	$file = fopen( $file_path, 'ab+' );
+
+	$temp_array = array_map( 'strlen', $data );
+	$max        = max( $temp_array );
+	$middle     = $max / 2;
+
+	foreach ( $data as $str ) {
+		if ( $middle < lengths_string( $str ) ) {
+			fwrite( $file, $str . PHP_EOL );
+		}
 	}
 
 	fclose( $file );
 }
 
-/**
- * Write file.
- *
- * @param string $file_path File path.
- * @param string $str       String data.
- *
- * @return void
- */
-function file_write( string $file_path, string $str ): void {
-	$file = fopen( $file_path, 'ab+' );
-
-	fwrite( $file, $str . PHP_EOL );
-
-	fclose( $file );
-}
-
-file_read( READ_FILE_NAME );
+longer_average( LONGER_AVERAGE_FILE_NAME, read_to_array( READ_FILE_NAME ) );
