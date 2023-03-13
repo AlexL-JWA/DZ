@@ -23,13 +23,13 @@ function file_read( string $file_path ): void {
 	while ( ! feof( $file ) ) {
 		$str = trim( fgets( $file ) );
 		if ( $i % 2 !== 0 ) {
-			var_dump( $i, $str );
 			file_write( WRITE_FILE_NAME, $str );
 		}
 
 		$i ++;
 	}
 
+	fclose( $file );
 }
 
 /**
