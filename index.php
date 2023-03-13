@@ -6,10 +6,9 @@
 const READ_FILE_NAME = 'read.txt';
 
 /**
- * Longer than average file name.
+ * File name to write.
  */
-const LONGER_AVERAGE_FILE_NAME = 'longer.txt';
-
+const WRITE_FILE_NAME = 'result.txt';
 
 /**
  * Read file to array.
@@ -27,9 +26,7 @@ function read_to_array( string $file_path ): array {
 
 		$str = trim( fgets( $file ) );
 
-		if ( ! empty( $str ) ) {
-			$string_array[] = $str;
-		}
+		$string_array = explode( ', ', $str );
 	}
 
 	fclose( $file );
@@ -38,38 +35,60 @@ function read_to_array( string $file_path ): array {
 }
 
 /**
- * Lengths string.
+ * Fizz Buzz log in file.
  *
- * @param string $str
- *
- * @return int
- */
-function lengths_string( string $str ): int {
-	return strlen( $str );
-}
-
-/**
- * Longer average.
- *
- * @param string $file_path
- * @param array  $data
+ * @param array $data Data.
  *
  * @return void
  */
-function longer_average( string $file_path, array $data ): void {
-	$file = fopen( $file_path, 'ab+' );
+function fizz_buzz_log( array $data ): void {
 
-	$temp_array = array_map( 'strlen', $data );
-	$max        = max( $temp_array );
-	$middle     = $max / 2;
-
-	foreach ( $data as $str ) {
-		if ( $middle < lengths_string( $str ) ) {
-			fwrite( $file, $str . PHP_EOL );
+	foreach ( $data as $item ) {
+		if ( (int) $item % 3 === 0 ) {
+			file_write( WRITE_FILE_NAME, 'Fizz' );
+		} elseif ( (int) $item % 5 === 0 ) {
+			file_write( WRITE_FILE_NAME, 'Buzz' );
+		} else {
+			file_write( WRITE_FILE_NAME, $item );
 		}
 	}
+}
+
+/**
+ * Echo fizz buzz.
+ *
+ * @param array $data Data.
+ *
+ * @return void
+ */
+function fizz_buzz( array $data ): void {
+
+	foreach ( $data as $item ) {
+		if ( (int) $item % 3 === 0 ) {
+			echo 'Fizz' . PHP_EOL;
+		} elseif ( (int) $item % 5 === 0 ) {
+			echo 'Buzz' . PHP_EOL;
+		} else {
+			echo $item . PHP_EOL;
+		}
+	}
+}
+
+
+/**
+ * Write file.
+ *
+ * @param string $file_path File path.
+ * @param string $str       String data.
+ *
+ * @return void
+ */
+function file_write( string $file_path, string $str ): void {
+	$file = fopen( $file_path, 'ab+' );
+
+	fwrite( $file, $str . PHP_EOL );
 
 	fclose( $file );
 }
 
-longer_average( LONGER_AVERAGE_FILE_NAME, read_to_array( READ_FILE_NAME ) );
+fizz_buzz_log( read_to_array( READ_FILE_NAME ) );
