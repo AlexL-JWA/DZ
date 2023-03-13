@@ -15,15 +15,14 @@ const WRITE_FILE_NAME = 'result.txt';
  *
  * @param string $file_path File path.
  *
- * @return false|resource
  */
-function file_read( string $file_path ) {
-	$file = fopen( $file_path, 'r' );
+function file_read( string $file_path ): void {
+	$file = fopen( $file_path, 'rb' );
 
 	$i = 1;
 	while ( ! feof( $file ) ) {
 		$str = trim( fgets( $file ) );
-		if ( $i % 2 != 0 ) {
+		if ( $i % 2 !== 0 ) {
 			var_dump( $i, $str );
 			file_write( WRITE_FILE_NAME, $str );
 		}
@@ -33,8 +32,16 @@ function file_read( string $file_path ) {
 
 }
 
-function file_write( string $file_path, string $str ) {
-	$file = fopen( $file_path, 'a+' );
+/**
+ * Write file.
+ *
+ * @param string $file_path File path.
+ * @param string $str       String data.
+ *
+ * @return void
+ */
+function file_write( string $file_path, string $str ): void {
+	$file = fopen( $file_path, 'ab+' );
 
 	fwrite( $file, $str . PHP_EOL );
 
